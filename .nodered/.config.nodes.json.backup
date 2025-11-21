@@ -689,5 +689,24 @@
                 "file": "/Users/mac/Desktop/NodeRed/node-red-main-idea-brain/node_modules/node-red-contrib-redis/redis.js"
             }
         }
+    },
+    "node-red-node-markdown": {
+        "name": "node-red-node-markdown",
+        "version": "0.6.0",
+        "local": false,
+        "user": false,
+        "nodes": {
+            "markdown": {
+                "name": "markdown",
+                "types": [
+                    "markdown"
+                ],
+                "enabled": true,
+                "local": false,
+                "user": false,
+                "module": "node-red-node-markdown",
+                "file": "/Users/mac/Desktop/NodeRed/node-red-main-idea-brain/node_modules/node-red-node-markdown/70-markdown.js"
+            }
+        }
     }
 }

@@ -126,7 +126,7 @@
         "tab": "fd0e10e1a1da7d41",
         "order": 1,
         "disp": true,
-        "width": 6,
+        "width": 12,
         "collapse": false,
         "className": ""
     },
@@ -147,7 +147,7 @@
         "name": "Problem Input",
         "label": "Describe your problem",
         "group": "f45ec5623cea7e52",
-        "order": 1,
+        "order": 2,
         "width": 0,
         "height": 0,
         "options": [
@@ -200,7 +200,7 @@
         "type": "function",
         "z": "flow1",
         "name": "Initialize Session",
-        "func": "// Сохраняем запрос пользователя\nconst userProblem = msg.payload.problem || msg.payload.chatInput || 'Improve team productivity';\nflow.set('userInput', userProblem);\nflow.set('sessionId', Date.now());\n\nnode.status({fill:\"blue\",shape:\"dot\",text:\"Started: \" + userProblem.substring(0,20)});\n\nreturn msg;",
+        "func": "// Сохраняем запрос пользователя\nconst userProblem = msg.payload.problem || msg.payload.chatInput || 'Improve team productivity';\nflow.set('userInput', userProblem);\nflow.set('sessionId', Date.now());\n\n// Определяем источник запроса (HTTP API или Dashboard)\nconst isHttpRequest = msg.req && msg.req.headers;\nflow.set('isHttpRequest', isHttpRequest);\n\n// Сохраняем req и res для HTTP ответа\nif (isHttpRequest) {\n    flow.set('httpReq', msg.req);\n    flow.set('httpRes', msg.res);\n}\n\nnode.status({fill:\"blue\",shape:\"dot\",text:\"Started: \" + userProblem.substring(0,20)});\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "x": 320,
@@ -713,15 +713,18 @@
         "type": "function",
         "z": "flow1",
         "name": "Format Final Response",
-        "func": "msg.payload = {\n    success: true,\n    finalSolution: msg.payload.response,\n    originalProblem: flow.get('userInput'),\n    timestamp: new Date().toISOString(),\n    sessionId: flow.get('sessionId')\n};\n\nnode.status({fill:\"green\",shape:\"dot\",text:\"Complete!\"});\n\n// Очищаем flow context\nflow.set('userInput', null);\nflow.set('collectedWords', []);\nflow.set('sessionId', null);\n\nreturn msg;",
-        "outputs": 1,
+        "func": "msg.payload = {\n    success: true,\n    finalSolution: msg.payload.response,\n    originalProblem: flow.get('userInput'),\n    timestamp: new Date().toISOString(),\n    sessionId: flow.get('sessionId')\n};\n\nnode.status({fill:\"green\",shape:\"dot\",text:\"Complete!\"});\n\n// Сохраняем флаг HTTP запроса для дальнейшей маршрутизации\nconst isHttpRequest = flow.get('isHttpRequest');\n\n// Восстанавливаем req и res для HTTP ответа\nif (isHttpRequest) {\n    msg.req = flow.get('httpReq');\n    msg.res = flow.get('httpRes');\n}\n\n// Очищаем flow context\nflow.set('userInput', null);\nflow.set('collectedWords', []);\nflow.set('sessionId', null);\nflow.set('isHttpRequest', null);\nflow.set('httpReq', null);\nflow.set('httpRes', null);\n\n// Отправляем в разные выходы в зависимости от источника\nif (isHttpRequest) {\n    return [msg, null]; // HTTP response\n} else {\n    return [null, msg]; // Dashboard only\n}",
+        "outputs": 2,
         "noerr": 0,
         "x": 4830,
         "y": 200,
         "wires": [
             [
-                "5a4554ea23bf2cd1",
+                "http_response_html",
                 "9d5feb2ce34d68cb"
+            ],
+            [
+                "5a4554ea23bf2cd1"
             ]
         ]
     },
@@ -765,7 +768,7 @@
         "name": "Send HTML Response",
         "statusCode": "200",
         "headers": {
-            "content-type": "text/html"
+            "content-type": "application/json"
         },
         "x": 5300,
         "y": 200,
@@ -812,11 +815,11 @@
         "type": "ui_template",
         "z": "flow1",
         "group": "f45ec5623cea7e52",
-        "name": "",
-        "order": 0,
+        "name": "Idea Output",
+        "order": 1,
         "width": 0,
         "height": 0,
-        "format": "<h1>Hello</h1>\n<div ng-bind-html=\"msg.payload\"></div>",
+        "format": "<style>\n  .idea-card {\n    background: white;\n    border-radius: 12px;\n    box-shadow: 0 4px 6px rgba(0,0,0,0.1);\n    padding: 24px;\n    font-family: -apple-system, system-ui, sans-serif;\n    color: #333;\n    margin-top: 20px;\n  }\n  .idea-header {\n    border-bottom: 2px solid #f0f0f0;\n    padding-bottom: 16px;\n    margin-bottom: 16px;\n  }\n  .idea-header h3 {\n    margin: 0 0 8px 0;\n    color: #2c3e50;\n  }\n  .idea-header small {\n    color: #7f8c8d;\n    font-size: 0.9em;\n  }\n  .idea-content {\n    line-height: 1.6;\n    background: #f8f9fa;\n    padding: 16px;\n    border-radius: 8px;\n    font-size: 1.1em;\n    color: #2c3e50;\n  }\n  .idea-footer {\n    margin-top: 16px;\n    text-align: right;\n    font-size: 0.8em;\n    color: #bdc3c7;\n  }\n</style>\n\n<div class=\"idea-card\" ng-if=\"msg.payload.success\">\n  <div class=\"idea-header\">\n    <h3>🚀 Innovation Generated</h3>\n    <small>Problem: {{msg.payload.originalProblem}}</small>\n  </div>\n  <div class=\"idea-content\" ng-bind-html=\"msg.payload.finalSolution\">\n  </div>\n  <div class=\"idea-footer\">\n    Session: {{msg.payload.sessionId}}\n  </div>\n</div>\n<div ng-if=\"!msg.payload.success\" style=\"text-align: center; color: #7f8c8d; margin-top: 20px;\">\n  <em>Ready to brainstorm. Enter a problem above!</em>\n</div>",
         "storeOutMessages": true,
         "fwdInMessages": true,
         "resendOnRefresh": true,
@@ -833,7 +836,7 @@
         "type": "markdown",
         "z": "flow1",
         "name": "",
-        "property": "payload",
+        "property": "payload.finalSolution",
         "x": 5050,
         "y": 200,
         "wires": [

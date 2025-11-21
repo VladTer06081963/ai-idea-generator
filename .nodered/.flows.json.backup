@@ -141,6 +141,43 @@
         "wires": []
     },
     {
+        "id": "dashboard_form",
+        "type": "ui_form",
+        "z": "flow1",
+        "name": "Problem Input",
+        "label": "Describe your problem",
+        "group": "f45ec5623cea7e52",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "options": [
+            {
+                "label": "Problem",
+                "value": "problem",
+                "type": "text",
+                "required": true,
+                "rows": null
+            }
+        ],
+        "formValue": {
+            "problem": ""
+        },
+        "payload": "",
+        "submit": "Brainstorm!",
+        "cancel": "",
+        "topic": "",
+        "topicType": "str",
+        "splitLayout": "",
+        "className": "",
+        "x": 120,
+        "y": 280,
+        "wires": [
+            [
+                "init_session"
+            ]
+        ]
+    },
+    {
         "id": "http_input",
         "type": "http in",
         "z": "flow1",
@@ -167,7 +204,7 @@
         "outputs": 1,
         "noerr": 0,
         "x": 320,
-        "y": 200,
+        "y": 220,
         "wires": [
             [
                 "debug_input",
@@ -180,7 +217,7 @@
         "type": "debug",
         "z": "flow1",
         "name": "1️⃣ Input",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": true,
@@ -188,7 +225,7 @@
         "targetType": "msg",
         "statusVal": "payload.problem",
         "statusType": "auto",
-        "x": 380,
+        "x": 280,
         "y": 140,
         "wires": []
     },
@@ -683,7 +720,7 @@
         "y": 200,
         "wires": [
             [
-                "5a4554ea23bf2cd1",
+                "e92dde3a0c5a0351",
                 "9d5feb2ce34d68cb"
             ]
         ]
@@ -775,11 +812,11 @@
         "type": "ui_template",
         "z": "flow1",
         "group": "f45ec5623cea7e52",
-        "name": "",
-        "order": 0,
+        "name": "Idea Output",
+        "order": 2,
         "width": 0,
         "height": 0,
-        "format": "<h1>Hello</h1>\n<div ng-bind-html=\"msg.payload\"></div>",
+        "format": "<style>\n  .idea-card {\n    background: white;\n    border-radius: 12px;\n    box-shadow: 0 4px 6px rgba(0,0,0,0.1);\n    padding: 24px;\n    font-family: -apple-system, system-ui, sans-serif;\n    color: #333;\n    margin-top: 20px;\n  }\n  .idea-header {\n    border-bottom: 2px solid #f0f0f0;\n    padding-bottom: 16px;\n    margin-bottom: 16px;\n  }\n  .idea-header h3 {\n    margin: 0 0 8px 0;\n    color: #2c3e50;\n  }\n  .idea-header small {\n    color: #7f8c8d;\n    font-size: 0.9em;\n  }\n  .idea-content {\n    white-space: pre-wrap;\n    line-height: 1.6;\n    background: #f8f9fa;\n    padding: 16px;\n    border-radius: 8px;\n    font-size: 1.1em;\n    color: #2c3e50;\n  }\n  .idea-footer {\n    margin-top: 16px;\n    text-align: right;\n    font-size: 0.8em;\n    color: #bdc3c7;\n  }\n</style>\n\n<div class=\"idea-card\" ng-if=\"msg.payload.success\">\n  <div class=\"idea-header\">\n    <h3>🚀 Innovation Generated</h3>\n    <small>Problem: {{msg.payload.originalProblem}}</small>\n  </div>\n  <div class=\"idea-content\">\n    {{msg.payload.finalSolution}}\n  </div>\n  <div class=\"idea-footer\">\n    Session: {{msg.payload.sessionId}}\n  </div>\n</div>\n<div ng-if=\"!msg.payload.success\" style=\"text-align: center; color: #7f8c8d; margin-top: 20px;\">\n  <em>Ready to brainstorm. Enter a problem above!</em>\n</div>",
         "storeOutMessages": true,
         "fwdInMessages": true,
         "resendOnRefresh": true,

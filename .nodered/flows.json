@@ -1,0 +1,846 @@
+[
+    {
+        "id": "flow1",
+        "type": "tab",
+        "label": "AI Idea Generator",
+        "disabled": false,
+        "info": "Генератор инновационных идей с использованием AI и случайных слов"
+    },
+    {
+        "id": "redis_server",
+        "type": "redis-config",
+        "name": "Redis Local",
+        "options": "{\"host\":\"localhost\",\"port\":6379,\"db\":0}",
+        "cluster": false,
+        "optionsType": "json"
+    },
+    {
+        "id": "fd0e10e1a1da7d41",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "a72fa016ebf50c3f",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-light",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#0094CE",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#097479",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": false
+            },
+            "customTheme": {
+                "name": "Untitled Theme 1",
+                "default": "#4B7930",
+                "baseColor": "#4B7930",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#0094CE",
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-backgroundColor": {
+                    "value": "#fafafa",
+                    "edited": false
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-textColor": {
+                    "value": "#1bbfff",
+                    "edited": false
+                },
+                "group-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "widget-textColor": {
+                    "value": "#111111",
+                    "edited": false
+                },
+                "widget-backgroundColor": {
+                    "value": "#0094ce",
+                    "edited": false
+                },
+                "widget-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "base-font": {
+                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+                }
+            },
+            "angularTheme": {
+                "primary": "indigo",
+                "accents": "blue",
+                "warn": "red",
+                "background": "grey",
+                "palette": "light"
+            }
+        },
+        "site": {
+            "name": "Node-RED Dashboard",
+            "hideToolbar": "false",
+            "allowSwipe": "false",
+            "lockMenu": "false",
+            "allowTempTheme": "true",
+            "dateFormat": "DD/MM/YYYY",
+            "sizes": {
+                "sx": 48,
+                "sy": 48,
+                "gx": 6,
+                "gy": 6,
+                "cx": 6,
+                "cy": 6,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
+        "id": "f45ec5623cea7e52",
+        "type": "ui_group",
+        "name": "Default",
+        "tab": "fd0e10e1a1da7d41",
+        "order": 1,
+        "disp": true,
+        "width": 6,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "welcome_note",
+        "type": "comment",
+        "z": "flow1",
+        "name": "🚀 AI Idea Generator - Генератор инновационных идей",
+        "info": "## Рабочий процесс генератора идей\n\nПОСЛЕДОВАТЕЛЬНОСТЬ:\n1. POST запрос с проблемой\n2. Генерация 36+ случайных слов через AI\n3. Накопление в Redis\n4. Brainstorming AI (5 идей)\n5. Critic AI (финальное решение)\n\nЗАПРОС:\nPOST http://localhost:1880/brainstorm\n{\"problem\": \"ваша задача\"}",
+        "x": 240,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "dashboard_form",
+        "type": "ui_form",
+        "z": "flow1",
+        "name": "Problem Input",
+        "label": "Describe your problem",
+        "group": "f45ec5623cea7e52",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "options": [
+            {
+                "label": "Problem",
+                "value": "problem",
+                "type": "text",
+                "required": true,
+                "rows": null
+            }
+        ],
+        "formValue": {
+            "problem": ""
+        },
+        "payload": "",
+        "submit": "Brainstorm!",
+        "cancel": "",
+        "topic": "",
+        "topicType": "str",
+        "splitLayout": "",
+        "className": "",
+        "x": 120,
+        "y": 280,
+        "wires": [
+            [
+                "init_session"
+            ]
+        ]
+    },
+    {
+        "id": "http_input",
+        "type": "http in",
+        "z": "flow1",
+        "name": "Chat Input",
+        "url": "/brainstorm",
+        "method": "post",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 120,
+        "y": 200,
+        "wires": [
+            [
+                "init_session"
+            ]
+        ]
+    },
+    {
+        "id": "init_session",
+        "type": "function",
+        "z": "flow1",
+        "name": "Initialize Session",
+        "func": "// Сохраняем запрос пользователя\nconst userProblem = msg.payload.problem || msg.payload.chatInput || 'Improve team productivity';\nflow.set('userInput', userProblem);\nflow.set('sessionId', Date.now());\n\nnode.status({fill:\"blue\",shape:\"dot\",text:\"Started: \" + userProblem.substring(0,20)});\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 320,
+        "y": 220,
+        "wires": [
+            [
+                "debug_input",
+                "mersenne_twister"
+            ]
+        ]
+    },
+    {
+        "id": "debug_input",
+        "type": "debug",
+        "z": "flow1",
+        "name": "1️⃣ Input",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "payload.problem",
+        "statusType": "auto",
+        "x": 280,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "mersenne_twister",
+        "type": "function",
+        "z": "flow1",
+        "name": "Mersenne Twister Generator",
+        "func": "// Native implementation of Mersenne Twister MT19937\nclass MersenneTwister {\n    constructor(seed) {\n        this.MT = new Array(624);\n        this.index = 0;\n        this.MT[0] = seed || Date.now();\n        for (let i = 1; i < 624; i++) {\n            this.MT[i] = (1812433253 * (this.MT[i - 1] ^ (this.MT[i - 1] >>> 30)) + i) >>> 0;\n        }\n    }\n\n    extractNumber() {\n        if (this.index === 0) {\n            this.generateNumbers();\n        }\n        \n        let y = this.MT[this.index];\n        y ^= y >>> 11;\n        y ^= (y << 7) & 0x9d2c5680;\n        y ^= (y << 15) & 0xefc60000;\n        y ^= y >>> 18;\n        \n        this.index = (this.index + 1) % 624;\n        return y >>> 0;\n    }\n\n    generateNumbers() {\n        for (let i = 0; i < 624; i++) {\n            const y = (this.MT[i] & 0x80000000) + (this.MT[(i + 1) % 624] & 0x7fffffff);\n            this.MT[i] = this.MT[(i + 397) % 624] ^ (y >>> 1);\n            if (y % 2 !== 0) {\n                this.MT[i] ^= 0x9908b0df;\n            }\n        }\n    }\n\n    random() {\n        return this.extractNumber() / 0x100000000;\n    }\n}\n\nconst timestamp = Date.now();\nconst generator = new MersenneTwister(timestamp);\n\nfunction random_int(min = 0, max = 10000000000) {\n    const range = max - min + 1;\n    return Math.floor(generator.random() * range) + min;\n}\n\nconst randomNumber = random_int();\nconst customRandomNumber = random_int();\n// const calculatedNumber = Number(BigInt(randomNumber) * BigInt(customRandomNumber) * BigInt(timestamp)) % 1000000n;\nconst calculatedNumber = Number((BigInt(randomNumber) * BigInt(customRandomNumber) * BigInt(timestamp)) % 1000000n);\n\nmsg.randomNumber = randomNumber;\nmsg.customRandomNumber = customRandomNumber;\nmsg.seed = timestamp;\nmsg.number = calculatedNumber;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 160,
+        "wires": [
+            [
+                "debug_mersenne",
+                "prepare_ollama_word"
+            ]
+        ]
+    },
+    {
+        "id": "debug_mersenne",
+        "type": "debug",
+        "z": "flow1",
+        "name": "2️⃣ Random Number",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "number",
+        "targetType": "msg",
+        "statusVal": "number",
+        "statusType": "auto",
+        "x": 580,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "prepare_ollama_word",
+        "type": "function",
+        "z": "flow1",
+        "name": "Prepare Ollama Request (Word)",
+        "func": "msg.payload = {\n    \"model\": \"gpt-oss:20b-cloud\",\n    \"prompt\": \"Number: \" + msg.number + \"\\n\\nGenerate exactly ONE random English word based on this seed number. Return only the word, nothing else.\",\n    \"system\": \"You are a specialized agent that generates random English words with high entropy. Your sole function is to return EXACTLY ONE word per request. Use the provided number as a seed. Maximize entropy across word length, frequency, and semantic fields. Include all word classes and registers. Return ONLY the word with no explanation.\",\n    \"stream\": false,\n    \"options\": {\n        \"temperature\": 1,\n        \"top_p\": 1,\n        \"frequency_penalty\": 1\n    }\n};\n\nmsg.headers = {\n    \"Content-Type\": \"application/json\"\n};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 810,
+        "y": 200,
+        "wires": [
+            [
+                "call_ollama_word"
+            ]
+        ]
+    },
+    {
+        "id": "call_ollama_word",
+        "type": "http request",
+        "z": "flow1",
+        "name": "Call Ollama API (Word)",
+        "method": "POST",
+        "ret": "obj",
+        "url": "http://localhost:11434/api/generate",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 1070,
+        "y": 200,
+        "wires": [
+            [
+                "parse_word_response"
+            ]
+        ]
+    },
+    {
+        "id": "parse_word_response",
+        "type": "function",
+        "z": "flow1",
+        "name": "Parse Word Response",
+        "func": "// Извлекаем слово из ответа Ollama\nconst word = msg.payload.response.trim().replace(/[`'\"\\n]/g, '');\nmsg.generatedWord = word;\n\n// Подготавливаем для Redis RPUSH\nmsg.topic = \"brainstorm\";\nmsg.payload = word;\n\nnode.status({fill:\"green\",shape:\"dot\",text:\"Word: \" + word});\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1310,
+        "y": 200,
+        "wires": [
+            [
+                "debug_word",
+                "redis_rpush"
+            ]
+        ]
+    },
+    {
+        "id": "debug_word",
+        "type": "debug",
+        "z": "flow1",
+        "name": "3️⃣ Generated Word",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "generatedWord",
+        "targetType": "msg",
+        "statusVal": "generatedWord",
+        "statusType": "auto",
+        "x": 1330,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "redis_rpush",
+        "type": "redis-command",
+        "z": "flow1",
+        "server": "redis_server",
+        "command": "rpush",
+        "name": "Push Word to Redis",
+        "topic": "brainstorm",
+        "params": "[]",
+        "paramsType": "json",
+        "block": false,
+        "x": 1540,
+        "y": 140,
+        "wires": [
+            [
+                "fix_topic_incr"
+            ]
+        ]
+    },
+    {
+        "id": "fix_topic_incr",
+        "type": "function",
+        "z": "flow1",
+        "name": "Fix Topic for INCR",
+        "func": "// Меняем topic для команды INCR\nmsg.topic = \"brainstorm_count\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1650,
+        "y": 200,
+        "wires": [
+            [
+                "redis_incr"
+            ]
+        ]
+    },
+    {
+        "id": "redis_incr",
+        "type": "redis-command",
+        "z": "flow1",
+        "server": "redis_server",
+        "command": "incr",
+        "name": "Increment Counter",
+        "topic": "brainstorm_count",
+        "params": "[]",
+        "paramsType": "json",
+        "block": false,
+        "x": 1770,
+        "y": 320,
+        "wires": [
+            [
+                "prepare_expire"
+            ]
+        ]
+    },
+    {
+        "id": "prepare_expire",
+        "type": "function",
+        "z": "flow1",
+        "name": "Prepare Expire",
+        "func": "// Подготовка для команды EXPIRE\nmsg.topic = \"brainstorm_count\";\nmsg.payload = \"30\"; // TTL в секундах (строка!)\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1970,
+        "y": 200,
+        "wires": [
+            [
+                "redis_expire"
+            ]
+        ]
+    },
+    {
+        "id": "redis_expire",
+        "type": "redis-command",
+        "z": "flow1",
+        "server": "redis_server",
+        "command": "expire",
+        "name": "Set TTL 30s",
+        "topic": "",
+        "params": "[]",
+        "paramsType": "json",
+        "block": false,
+        "x": 2150,
+        "y": 140,
+        "wires": [
+            [
+                "prepare_get_count"
+            ]
+        ]
+    },
+    {
+        "id": "prepare_get_count",
+        "type": "function",
+        "z": "flow1",
+        "name": "Prepare GET Count",
+        "func": "msg.topic = \"brainstorm_count\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 2350,
+        "y": 200,
+        "wires": [
+            [
+                "redis_get_count"
+            ]
+        ]
+    },
+    {
+        "id": "redis_get_count",
+        "type": "redis-command",
+        "z": "flow1",
+        "server": "redis_server",
+        "command": "get",
+        "name": "Get Word Count",
+        "topic": "",
+        "params": "[]",
+        "paramsType": "json",
+        "block": false,
+        "x": 2540,
+        "y": 140,
+        "wires": [
+            [
+                "debug_count",
+                "check_count"
+            ]
+        ]
+    },
+    {
+        "id": "debug_count",
+        "type": "debug",
+        "z": "flow1",
+        "name": "4️⃣ Word Count",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "payload",
+        "statusType": "auto",
+        "x": 2570,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "check_count",
+        "type": "switch",
+        "z": "flow1",
+        "name": "Check >= 6 words (TEST MODE)",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "gte",
+                "v": "6",
+                "vt": "num"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 2770,
+        "y": 200,
+        "wires": [
+            [
+                "start_collection"
+            ],
+            [
+                "loop_back"
+            ]
+        ]
+    },
+    {
+        "id": "loop_back",
+        "type": "function",
+        "z": "flow1",
+        "name": "Loop Back",
+        "func": "// Возвращаемся к генерации нового слова\nnode.status({fill:\"yellow\",shape:\"ring\",text:\"Collecting words: \" + msg.payload});\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 2990,
+        "y": 240,
+        "wires": [
+            [
+                "mersenne_twister"
+            ]
+        ]
+    },
+    {
+        "id": "start_collection",
+        "type": "function",
+        "z": "flow1",
+        "name": "Start Collection",
+        "func": "// Инициализируем сбор всех слов\nflow.set('collectedWords', []);\n\n// Очищаем msg и устанавливаем только topic\nmsg = {};\nmsg.topic = \"brainstorm\";\nmsg.payload = null;\n\nnode.status({fill:\"blue\",shape:\"dot\",text:\"Starting collection\"});\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 3020,
+        "y": 160,
+        "wires": [
+            [
+                "redis_lpop"
+            ]
+        ]
+    },
+    {
+        "id": "redis_lpop",
+        "type": "redis-command",
+        "z": "flow1",
+        "server": "redis_server",
+        "command": "lpop",
+        "name": "Pop Word from Redis",
+        "topic": "brainstorm",
+        "params": "[]",
+        "paramsType": "json",
+        "block": false,
+        "x": 3200,
+        "y": 320,
+        "wires": [
+            [
+                "collect_words"
+            ]
+        ]
+    },
+    {
+        "id": "collect_words",
+        "type": "function",
+        "z": "flow1",
+        "name": "Collect All Words",
+        "func": "const words = flow.get('collectedWords') || [];\n\nif (msg.payload && msg.payload !== null && msg.payload !== '') {\n    // Добавляем слово в коллекцию\n    words.push(msg.payload);\n    flow.set('collectedWords', words);\n    \n    node.status({fill:\"blue\",shape:\"ring\",text:\"Collected: \" + words.length + \" words\"});\n    \n    // Продолжаем собирать следующее слово\n    const nextMsg = {};\n    nextMsg.topic = \"brainstorm\";\n    nextMsg.payload = null;\n    return [nextMsg, null];\n} else {\n    // Все слова собраны - переходим к Brainstorming\n    node.status({fill:\"green\",shape:\"dot\",text:\"Collection complete: \" + words.length});\n    \n    msg.keywords = words.join('\\n');\n    msg.userInput = flow.get('userInput');\n    msg.wordCount = words.length;\n    \n    // Очищаем коллекцию\n    flow.set('collectedWords', []);\n    \n    return [null, msg];\n}",
+        "outputs": 2,
+        "noerr": 0,
+        "x": 3420,
+        "y": 180,
+        "wires": [
+            [
+                "redis_lpop"
+            ],
+            [
+                "debug_keywords",
+                "prepare_brainstorm"
+            ]
+        ]
+    },
+    {
+        "id": "debug_keywords",
+        "type": "debug",
+        "z": "flow1",
+        "name": "5️⃣ All Keywords",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "keywords",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 3440,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "prepare_brainstorm",
+        "type": "function",
+        "z": "flow1",
+        "name": "Prepare Brainstorm Request",
+        "func": "msg.payload = {\n    \"model\": \"deepseek-v3.1:671b-cloud\",\n    \"prompt\": \"Problem: \" + msg.userInput + \"\\nKeywords: \" + msg.keywords,\n    \"system\": \"You are an Ideation Specialist, a highly creative and innovative AI agent. Generate exactly five distinct and innovative ideas that solve the stated Problem. Each idea must incorporate one or more of the provided Keywords. For each idea provide: 1) Catchy title, 2) One-sentence summary, 3) Detailed paragraph explaining the solution, 4) List of primary keywords used. Use divergent thinking, creative synthesis, and feasibility with a forward-thinking mindset.\",\n    \"stream\": false,\n    \"options\": {\n        \"temperature\": 1,\n        \"top_p\": 1\n    }\n};\n\nmsg.headers = {\n    \"Content-Type\": \"application/json\"\n};\n\nnode.status({fill:\"blue\",shape:\"dot\",text:\"Brainstorming...\"});\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 3690,
+        "y": 200,
+        "wires": [
+            [
+                "call_brainstorm"
+            ]
+        ]
+    },
+    {
+        "id": "call_brainstorm",
+        "type": "http request",
+        "z": "flow1",
+        "name": "Call Ollama (Brainstorming)",
+        "method": "POST",
+        "ret": "obj",
+        "url": "http://localhost:11434/api/generate",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 3940,
+        "y": 200,
+        "wires": [
+            [
+                "parse_ideas"
+            ]
+        ]
+    },
+    {
+        "id": "parse_ideas",
+        "type": "function",
+        "z": "flow1",
+        "name": "Parse Ideas",
+        "func": "msg.ideas = msg.payload.response;\n\nnode.status({fill:\"green\",shape:\"dot\",text:\"5 ideas generated\"});\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 4160,
+        "y": 200,
+        "wires": [
+            [
+                "debug_ideas",
+                "prepare_critic"
+            ]
+        ]
+    },
+    {
+        "id": "debug_ideas",
+        "type": "debug",
+        "z": "flow1",
+        "name": "6️⃣ Five Ideas",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "ideas",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 4170,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "prepare_critic",
+        "type": "function",
+        "z": "flow1",
+        "name": "Prepare Critic Request",
+        "func": "msg.payload = {\n    \"model\": \"gpt-oss:120b-cloud\",\n    \"prompt\": msg.ideas,\n    \"system\": \"Вы — инновационный стратег, проницательный и прагматичный аналитик ИИ. Ваша единственная цель — провести строгую и крайне критичную оценку креативных предложений и синтезировать их в единое, реализуемое и превосходное решение. Критически проанализируйте эти пять предложений. Оцените каждое по следующим параметрам: влияние (насколько эффективно оно решает основную проблему?), жизнеспособность (насколько осуществимо это решение?), инновационность (действительно ли оно новаторское?), масштабируемость (может ли это решение развиваться?) и потенциальные подводные камни (каковы риски?). Затем синтезируйте ОДНО идеальное решение, которое может быть усовершенствованной версией сильнейшей идеи или стратегическим гибридом. Предоставьте: название окончательного предложения, краткое изложение (один абзац), подробное описание решения (полное описание), стратегическое обоснование (почему это идеальный выбор) и критические риски и способы их снижения (2–3 существенных риска и стратегии их снижения).).\",\n    \"stream\": false,\n    \"options\": {\n        \"temperature\": 1,\n        \"top_p\": 1\n    }\n};\n\nmsg.headers = {\n    \"Content-Type\": \"application/json\"\n};\n\nnode.status({fill:\"blue\",shape:\"dot\",text:\"Critical analysis...\"});\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 4380,
+        "y": 200,
+        "wires": [
+            [
+                "call_critic"
+            ]
+        ]
+    },
+    {
+        "id": "call_critic",
+        "type": "http request",
+        "z": "flow1",
+        "name": "Call Ollama (Critic)",
+        "method": "POST",
+        "ret": "obj",
+        "url": "http://localhost:11434/api/generate",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 4600,
+        "y": 200,
+        "wires": [
+            [
+                "format_response"
+            ]
+        ]
+    },
+    {
+        "id": "format_response",
+        "type": "function",
+        "z": "flow1",
+        "name": "Format Final Response",
+        "func": "msg.payload = {\n    success: true,\n    finalSolution: msg.payload.response,\n    originalProblem: flow.get('userInput'),\n    timestamp: new Date().toISOString(),\n    sessionId: flow.get('sessionId')\n};\n\nnode.status({fill:\"green\",shape:\"dot\",text:\"Complete!\"});\n\n// Очищаем flow context\nflow.set('userInput', null);\nflow.set('collectedWords', []);\nflow.set('sessionId', null);\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 4830,
+        "y": 200,
+        "wires": [
+            [
+                "5a4554ea23bf2cd1",
+                "9d5feb2ce34d68cb"
+            ]
+        ]
+    },
+    {
+        "id": "debug_final",
+        "type": "debug",
+        "z": "flow1",
+        "name": "7️⃣ Final Solution",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 5220,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "template_response",
+        "type": "template",
+        "z": "flow1",
+        "name": "Format as HTML",
+        "format": "html",
+        "syntax": "mustache",
+        "template": "<!DOCTYPE html>\n<html lang=\"ru\">\n<head>\n<meta charset=\"UTF-8\">\n<title>AI Brainstorm Result</title>\n<style>\nbody { font-family: Arial, sans-serif; margin: 20px; background: #f4f4f4; }\n.container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }\nh1 { color: #2c3e50; text-align: center; }\nh2 { color: #34495e; }\n.solution { background: #ecf0f1; padding: 15px; border-radius: 5px; margin: 10px 0; }\n.meta { color: #7f8c8d; font-size: small; text-align: center; }\npre { background: #f8f9fa; padding: 10px; border-radius: 3px; overflow-x: auto; white-space: pre-wrap; }\n</style>\n</head>\n<body>\n<div class=\"container\">\n<h1>🧠 Результат Brainstorm AI</h1>\n\n<h2>Оригинальная проблема:</h2>\n<div class=\"solution\"><p>{{payload.originalProblem}}</p></div>\n\n<h2>Финальное решение:</h2>\n<div class=\"solution\"><pre>{{payload.finalSolution}}</pre></div>\n\n<p class=\"meta\">Сеанс: {{payload.sessionId}} | Время: {{payload.timestamp}}</p>\n</div>\n</body>\n</html>",
+        "x": 5070,
+        "y": 100,
+        "wires": [
+            [
+                "http_response_html"
+            ]
+        ]
+    },
+    {
+        "id": "http_response_html",
+        "type": "http response",
+        "z": "flow1",
+        "name": "Send HTML Response",
+        "statusCode": "200",
+        "headers": {
+            "content-type": "text/html"
+        },
+        "x": 5300,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "config_note",
+        "type": "comment",
+        "z": "flow1",
+        "name": "⚙️ Конфигурация: Redis localhost:6379 | Ollama localhost:11434 | Модели: gpt-oss:20b, deepseek-v3.1:671b, gpt-oss:120b",
+        "info": "## Настройка:\n\n**Redis (Docker):**\n```bash\ndocker ps | grep redis\n# Порт 6379 должен быть проброшен\n```\n\n**Ollama модели:**\n```bash\nollama list\n# Должны быть:\n# - gpt-oss:20b-cloud\n# - deepseek-v3.1:671b-cloud  \n# - gpt-oss:120b-cloud\n```\n\n**Использование:**\n```bash\ncurl -X POST http://localhost:1880/brainstorm \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"problem\": \"Как улучшить продуктивность?\"}'\n```",
+        "x": 440,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "flow_note",
+        "type": "comment",
+        "z": "flow1",
+        "name": "📊 TEST MODE: Поток генерирует 6 слов вместо 36 для быстрого тестирования (было 72-180 сек → стало 12-30 сек)",
+        "info": "",
+        "x": 520,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "9d5feb2ce34d68cb",
+        "type": "debug",
+        "z": "flow1",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 5060,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "e92dde3a0c5a0351",
+        "type": "ui_template",
+        "z": "flow1",
+        "group": "f45ec5623cea7e52",
+        "name": "",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "format": "<h1>Hello</h1>\n<div ng-bind-html=\"msg.payload\"></div>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 5060,
+        "y": 280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5a4554ea23bf2cd1",
+        "type": "markdown",
+        "z": "flow1",
+        "name": "",
+        "property": "payload",
+        "x": 5050,
+        "y": 200,
+        "wires": [
+            [
+                "debug_final",
+                "e92dde3a0c5a0351"
+            ]
+        ]
+    }
+]

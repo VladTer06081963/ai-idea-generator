@@ -1,0 +1,23 @@
+{
+  "name": "my-nodered-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node-red -s ./settings.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "js-yaml": "^4.1.1",
+    "node-red": "^4.1.1",
+    "node-red-contrib-redis": "^1.4.0",
+    "node-red-dashboard": "^3.6.5",
+    "node-red-node-markdown": "^0.6.0"
+  },
+  "overrides": {
+    "js-yaml": "^4.1.1"
+  }
+}

@@ -116,8 +116,15 @@ body {
 }
 
 @keyframes slideUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .result-header {
@@ -141,18 +148,49 @@ body {
   color: var(--text-color);
 }
 
-.result-content h1, .result-content h2, .result-content h3 {
+.result-content h1,
+.result-content h2,
+.result-content h3 {
   margin-top: 1.5rem;
   color: #111827;
 }
 
-.result-content ul, .result-content ol {
+.result-content ul,
+.result-content ol {
   padding-left: 1.5rem;
 }
 
 .result-content li {
   margin-bottom: 0.5rem;
 }
+
+.result-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+.result-content table th,
+.result-content table td {
+  border: 1px solid #e5e7eb;
+  padding: 0.75rem;
+  text-align: left;
+}
+
+.result-content table th {
+  background-color: #f9fafb;
+  font-weight: 600;
+  color: #374151;
+}
+
+.result-content table tr:nth-child(even) {
+  background-color: #f9fafb;
+}
+
+.result-content table tr:hover {
+  background-color: #f3f4f6;
+}
+
 
 .result-footer {
   margin-top: 2rem;
